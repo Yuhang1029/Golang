@@ -203,15 +203,15 @@ world`
 
 字符串的常见操作有：
 
-| 方法                                        | 介绍      |
-| ----------------------------------------- | ------- |
-| `len(str)`                                | 求字符串长度  |
-| `fmt.Sprintf` 或者 +                        | 拼接字符串   |
-| `strings.Split`                           | 分割字符串   |
-| `strings.contatins`                       | 判断是否包含  |
-| `strings.HashPrefix`, `strings.HasSuffix` | 前缀/后缀判断 |
-| `strings.Index()`                         | 子串出现的位置 |
-| `strings.Join(a []string, sep string)`    | 字符串数组拼接 |
+| 方法                                       | 介绍      |
+| ---------------------------------------- | ------- |
+| `len(str)`                               | 求字符串长度  |
+| `fmt.Sprintf` 或者 +                       | 拼接字符串   |
+| `strings.Split`                          | 分割字符串   |
+| `strings.contatins`                      | 判断是否包含  |
+| `strings.HasPrefix`, `strings.HasSuffix` | 前缀/后缀判断 |
+| `strings.Index()`                        | 子串出现的位置 |
+| `strings.Join(a []string, sep string)`   | 字符串数组拼接 |
 
 ### byte 和 rune 类型
 
