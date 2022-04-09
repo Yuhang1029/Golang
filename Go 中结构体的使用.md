@@ -8,6 +8,8 @@
 
 [Go 中使用继承](https://segmentfault.com/a/1190000022429780)
 
+[Go 中结构体转 JSON 技巧](https://www.liwenzhou.com/posts/Go/json_tricks_in_go/)
+
 ---
 
 ## 类型别名和自定义类型
@@ -136,3 +138,53 @@ type Rectangle struct {
 ```
 
 从上面的例子看出，外层结构体类型通过匿名嵌套一个已命名的结构体类型后就可以获得匿名成员类型的所有导出成员，而且也获得了该类型导出的全部的方法。
+
+
+
+## 结构体和 JSON 转换的一些技巧
+
+在 Go 语言中，通过 `json.Marshal()` 和 `json.Unmarshal()` 来实现序列化和反序列化的操作。在结构体中，可以利用 `Tag` 指定一些相应信息。`Tag` 是结构体的源信息，可以在运行时候通过反射机制读取出来。`Tag`在结构体字段的后方定义，由一对**反引号**包裹起来，具体的格式如下：
+
+```go
+type Person struct {
+    Name   string  `json:"name"`
+    Age    int8    `json:"-"`
+    Sex    string  `json:"sex", omitempty`
+    weight int8
+}
+```
+
+如上所示，序列化与反序列化默认情况下使用结构体的字段名，我们可以通过给结构体字段添加tag来指定 JSON 序列化生成的字段名。
+
+
+
+下面是几个使用的小技巧：
+
+1. 如果你想在 JSON 序列化/反序列化的时候忽略掉结构体中的某个字段，可以按如下方式在tag中添加`-`。同样，如果该字段开头字母是小写的，代表他是私有字段，同样不会序列化出来。
+
+2. 当 struct 中的字段没有值时， `json.Marshal()` 序列化的时候不会忽略这些字段，而是默认输出字段的类型零值（例如`int`和`float`类型零值是 0，`string`类型零值是`""`，对象类型零值是 nil）。如果想要在序列序列化时忽略这些没有值的字段时，可以在对应字段添加`omitempty` tag。
+
+3. 对于结构体的嵌套，如果想要在嵌套的结构体为空时忽略该字段，仅添加`omitempty` 是不够的，还需要把相应的结构体字段从值类型编程指针类型。
+
+4. 有时候，前端在传递来的json数据中可能会使用字符串类型的数字，这个时候可以在结构体 `tag` 中添加`string`来告诉 `json` 包从字符串中解析相应字段的数据：
+   
+   ```go
+   type Card struct {
+   	ID    int64   `json:"id,string"`    // 添加string tag
+   	Score float64 `json:"score,string"` // 添加string tag
+   }
+   
+   func intAndStringDemo() {
+   	jsonStr1 := `{"id": "1234567","score": "88.50"}`
+   	var c1 Card
+   	if err := json.Unmarshal([]byte(jsonStr1), &c1); err != nil {
+   		fmt.Printf("json.Unmarsha jsonStr1 failed, err:%v\n", err)
+   		return
+   	}
+   	fmt.Printf("c1:%#v\n", c1) // c1:main.Card{ID:1234567, Score:88.5}
+   }
+   ```
+   
+   
+
+        
