@@ -139,8 +139,6 @@ type Rectangle struct {
 
 从上面的例子看出，外层结构体类型通过匿名嵌套一个已命名的结构体类型后就可以获得匿名成员类型的所有导出成员，而且也获得了该类型导出的全部的方法。
 
-
-
 ## 结构体和 JSON 转换的一些技巧
 
 在 Go 语言中，通过 `json.Marshal()` 和 `json.Unmarshal()` 来实现序列化和反序列化的操作。在结构体中，可以利用 `Tag` 指定一些相应信息。`Tag` 是结构体的源信息，可以在运行时候通过反射机制读取出来。`Tag`在结构体字段的后方定义，由一对**反引号**包裹起来，具体的格式如下：
@@ -156,8 +154,6 @@ type Person struct {
 
 如上所示，序列化与反序列化默认情况下使用结构体的字段名，我们可以通过给结构体字段添加tag来指定 JSON 序列化生成的字段名。
 
-
-
 下面是几个使用的小技巧：
 
 1. 如果你想在 JSON 序列化/反序列化的时候忽略掉结构体中的某个字段，可以按如下方式在tag中添加`-`。同样，如果该字段开头字母是小写的，代表他是私有字段，同样不会序列化出来。
@@ -170,21 +166,19 @@ type Person struct {
    
    ```go
    type Card struct {
-   	ID    int64   `json:"id,string"`    // 添加string tag
-   	Score float64 `json:"score,string"` // 添加string tag
+       ID    int64   `json:"id,string"`    // 添加string tag
+       Score float64 `json:"score,string"` // 添加string tag
    }
    
    func intAndStringDemo() {
-   	jsonStr1 := `{"id": "1234567","score": "88.50"}`
-   	var c1 Card
-   	if err := json.Unmarshal([]byte(jsonStr1), &c1); err != nil {
-   		fmt.Printf("json.Unmarsha jsonStr1 failed, err:%v\n", err)
-   		return
-   	}
-   	fmt.Printf("c1:%#v\n", c1) // c1:main.Card{ID:1234567, Score:88.5}
+       jsonStr1 := `{"id": "1234567","score": "88.50"}`
+       var c1 Card
+       if err := json.Unmarshal([]byte(jsonStr1), &c1); err != nil {
+           fmt.Printf("json.Unmarsha jsonStr1 failed, err:%v\n", err)
+           return
+       }
+       fmt.Printf("c1:%#v\n", c1) // c1:main.Card{ID:1234567, Score:88.5}
    }
    ```
-   
-   
 
         
